@@ -1,15 +1,19 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import Index from './src/screens/Index'
+import ComponentNaviations from './src/navigations/ComponentNaviations'
 
 const App = () => {
   return (
-    <View>
-      <Index/>
+    <View style={styles.container}>
+      <ComponentNaviations />
     </View>
   )
 }
 
 export default App
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+  }
+})
