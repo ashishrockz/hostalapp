@@ -11,7 +11,7 @@ const SearchHeader = () => {
       <TouchableOpacity onPress={() => navigation.openDrawer()}>
         <Image source={require('../../assets/Menu.png')} style={styles.menuIcon} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.searchBox}>
+      <TouchableOpacity style={styles.searchBox} onPress={()=>(navigation.navigate("SearchBar"))}>
         <Text style={styles.searchText}>Search by city</Text>
         <Image source={require('../../assets/Search.png')} style={styles.searchIcon} />
       </TouchableOpacity>

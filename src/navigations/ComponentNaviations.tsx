@@ -7,6 +7,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import DrawerContent from '../component/DrawerContent/DrawerContent';
 import Index from '../screens/Index';
 import SearchHeader from '../component/SearchHeader/SearchHeader';
+import Search from '../component/Search/Search';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const DrawerNavigation = () => {
@@ -33,7 +34,10 @@ const ComponentNaviations = () => {
             children={() => <DrawerNavigation/>}
             options={{headerShown: false}}
           />
-          
+          <Stack.Screen
+            name="SearchBar"
+            component={Search}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
