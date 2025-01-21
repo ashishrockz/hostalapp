@@ -33,26 +33,32 @@ const Legal = ({navigation}:any) => {
       <View style={styles.menuSection}>
         <MenuItem
           title="Privacy Policy"
+          iconSource={require('../assets/icons/privacy.png')}
           onPress={() => navigation.navigate('Privacy Policy')}
         />
         <MenuItem
           title="Terms And Conditions"
+          iconSource={require('../assets/icons/terms.png')}
           onPress={() => navigation.navigate('Terms And Conditions')}
         />
         <MenuItem
           title="Service Terms"
+          iconSource={require('../assets/icons/service.png')}
           onPress={() => navigation.navigate('Service Terms')}
         />
         <MenuItem
           title="Non Discrimination Policy"
+          iconSource={require('../assets/icons/nondisc.png')}
           onPress={() => navigation.navigate('Non Discrimination Policy')}
         />
         <MenuItem
           title="Booking Policy"
+          iconSource={require('../assets/icons/booking.png')}
           onPress={() => navigation.navigate('Booking Policy')}
         />
         <MenuItem
           title="Cancellation Policy"
+          iconSource={require('../assets/icons/cancellation.png')}
           onPress={() => navigation.navigate('Cancellation Policy')}
         />
       </View>

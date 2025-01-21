@@ -15,6 +15,9 @@ import Privacy from '../screens/privacy';
 import Login from '../screens/Login';
 import TermsAndConditions from '../screens/TermsAndConditions';
 import Cancellation from '../screens/Cancellation';
+import BookingPolicy from '../screens/BookingPolicy';
+import NonDisceimination from '../screens/NonDisceimination';
+import ServiceTerms from '../screens/ServiceTerms';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const DrawerNavigation = () => {
@@ -78,14 +81,44 @@ const ComponentNaviations = () => {
           <Stack.Screen
             name="Privacy Policy"
             component={Privacy}
+            options={{
+              headerTitleAlign: 'center',
+            }}
           />
           <Stack.Screen
             name="Terms And Conditions"
             component={TermsAndConditions}
+            options={{
+              headerTitleAlign: 'center',
+            }}
+          />
+           <Stack.Screen
+            name="Service Terms"
+            component={ServiceTerms}
+            options={{
+              headerTitleAlign: 'center',
+            }}
+          />
+           <Stack.Screen
+            name="Non Discrimination Policy"
+            component={NonDisceimination}
+            options={{
+              headerTitleAlign: 'center',
+            }}
+          />
+           <Stack.Screen
+            name="Booking Policy"
+            component={BookingPolicy}
+            options={{
+              headerTitleAlign: 'center',
+            }}
           />
           <Stack.Screen
             name="Cancellation Policy"
             component={Cancellation}
+            options={{
+              headerTitleAlign: 'center',
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

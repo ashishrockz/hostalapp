@@ -20,7 +20,7 @@ const Support = ({navigation}: any) => {
     
           <View style={styles.menuSection}>
             <MenuItem
-              iconSource={require('../assets/icons/account.png')}
+              iconSource={require('../assets/icons/faqs.png')}
               title="FAQS"
               subtitle="The section you will know about the Frequently Asked Questions."
               onPress={() => navigation.navigate('Login')}
