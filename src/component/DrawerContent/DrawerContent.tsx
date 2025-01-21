@@ -4,23 +4,27 @@ import {
   DrawerContentScrollView,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
-
+import {useNavigation} from '@react-navigation/native';
 interface User {
   profilePic: string | undefined;
 }
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [user, setUser] = useState<User | null>(null);
-
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <DrawerContentScrollView {...props} contentContainerStyle={styles.scrollContent}>
-        {/* Profile Section */}
+      <DrawerContentScrollView
+        {...props}
+        contentContainerStyle={styles.scrollContent}>
         <View style={styles.profileSection}>
           {user ? (
             user.profilePic ? (
               <View style={styles.profileContainer}>
-                <Image source={{uri: user.profilePic}} style={styles.profilePic} />
+                <Image
+                  source={{uri: user.profilePic}}
+                  style={styles.profilePic}
+                />
                 <Text style={styles.userName}>User Name</Text>
               </View>
             ) : (
@@ -33,23 +37,33 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
                 style={styles.profilePic}
               />
               <Text>Welcome Buddy!</Text>
-              <TouchableOpacity style={styles.loginButton}>
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.loginText}>Login</Text>
               </TouchableOpacity>
             </View>
           )}
         </View>
         <View style={styles.content}>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate('Profile')}>
             <Text style={styles.itemText}>Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate('Login')}>
             <Text style={styles.itemText}>Booking</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate('Legal')}>
             <Text style={styles.itemText}>Legal</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate('Support')}>
             <Text style={styles.itemText}>Support</Text>
           </TouchableOpacity>
         </View>
