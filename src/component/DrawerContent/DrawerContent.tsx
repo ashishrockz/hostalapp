@@ -80,7 +80,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         <TouchableOpacity style={styles.footerItem} onPress={()=>(navigation.navigate("Privacy Policy"))}>
           <Text style={styles.footerText}>Privacy Policy</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerItem}>
+        <TouchableOpacity style={styles.footerItem} onPress={()=>(navigation.navigate("Terms And Conditions"))}>
           <Text style={styles.footerText}>Terms and Conditions</Text>
         </TouchableOpacity>
         <Text style={styles.versionText}>Version 1.0.0</Text>

@@ -13,6 +13,8 @@ import Support from '../screens/Support';
 import Legal from '../screens/Legal';
 import Privacy from '../screens/privacy';
 import Login from '../screens/Login';
+import TermsAndConditions from '../screens/TermsAndConditions';
+import Cancellation from '../screens/Cancellation';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const DrawerNavigation = () => {
@@ -76,6 +78,14 @@ const ComponentNaviations = () => {
           <Stack.Screen
             name="Privacy Policy"
             component={Privacy}
+          />
+          <Stack.Screen
+            name="Terms And Conditions"
+            component={TermsAndConditions}
+          />
+          <Stack.Screen
+            name="Cancellation Policy"
+            component={Cancellation}
           />
         </Stack.Navigator>
       </NavigationContainer>
