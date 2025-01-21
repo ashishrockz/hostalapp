@@ -319,8 +319,8 @@ const styles = StyleSheet.create({
   statDivider: {
     borderLeftWidth: 1,
     borderStyle: 'dashed',
-    height: 70,
-    borderColor: '#bbb',
+    height: 80,
+    borderColor: 'black',
   },
   cardContainer: {
     flexDirection: 'row',
@@ -558,7 +558,6 @@ const styles = StyleSheet.create({
     height: 35,
     width: 140,
     marginVertical: 15,
-    resizeMode: 'contain',
   },
   testimonialText: {
     fontSize: 14,

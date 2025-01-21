@@ -8,6 +8,14 @@ import {useNavigation} from '@react-navigation/native';
 interface User {
   profilePic: string | undefined;
 }
+type DrawerParamList = {
+  Login: undefined;
+  Profile: undefined;
+  Booking: undefined;
+  Legal: undefined;
+  Support: undefined;
+  'Privacy Policy': undefined;
+};
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const [user, setUser] = useState<User | null>(null);
@@ -69,7 +77,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         </View>
       </DrawerContentScrollView>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerItem} onPress={()=>(navigation.navigate("Privacy"))}>
+        <TouchableOpacity style={styles.footerItem} onPress={()=>(navigation.navigate("Privacy Policy"))}>
           <Text style={styles.footerText}>Privacy Policy</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerItem}>

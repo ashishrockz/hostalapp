@@ -36,3 +36,5 @@ export const cities = [
         image: "https://images.hindustantimes.com/rf/image_size_960x540/HT/p2/2017/05/24/Pictures/file-file-photo-photo-kota-city-ht_a3227bf2-407f-11e7-b7e5-3de2b6485255.jpg",
     }
 ];
+
+export const legalArr=["Privacy Policy","Terms And Conditions","Service Terms","Non Discrimination Policy","Booking Policy","Cancellation Policy"]

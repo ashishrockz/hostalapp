@@ -74,7 +74,7 @@ const ComponentNaviations = () => {
             }}
           />
           <Stack.Screen
-            name="Privacy"
+            name="Privacy Policy"
             component={Privacy}
           />
         </Stack.Navigator>
