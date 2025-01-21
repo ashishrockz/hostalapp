@@ -8,10 +8,11 @@ import DrawerContent from '../component/DrawerContent/DrawerContent';
 import Index from '../screens/Index';
 import SearchHeader from '../component/SearchHeader/SearchHeader';
 import Search from '../component/Search/Search';
-import Login from '../screens/Login';
 import Profile from '../screens/Profile';
 import Support from '../screens/Support';
 import Legal from '../screens/Legal';
+import Privacy from '../screens/privacy';
+import Login from '../screens/Login';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const DrawerNavigation = () => {
@@ -71,6 +72,10 @@ const ComponentNaviations = () => {
             options={{
               headerTitleAlign: 'center',
             }}
+          />
+          <Stack.Screen
+            name="Privacy"
+            component={Privacy}
           />
         </Stack.Navigator>
       </NavigationContainer>
