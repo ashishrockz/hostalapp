@@ -1,11 +1,13 @@
 import { Dimensions, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { cities, citiesHostels } from '../../data/data';
+import { useNavigation } from '@react-navigation/native';
 
 const Search = () => {
   const [currentType, setCurrentType] = useState("");
   const [cityName, setCityName] = useState("");
   const [allCities, setAllCities] = useState(citiesHostels);
+  const navigation = useNavigation();
   useEffect(() => {
     const filteredCities = citiesHostels.filter((cityObj) =>
       cityObj.name.some((city) => city.toLowerCase().includes(cityName.toLowerCase()))
@@ -57,12 +59,13 @@ const Search = () => {
             <View key={obj.code}>
               <Text style={styles.codeText}>{obj.code}</Text>
               {obj.name.map((names) => (
-                <View style={styles.cityNameContainer} key={names}>
+                <TouchableOpacity onPress={() => navigation.navigate("hostelcard", { type: currentType, city: names })}
+                style={styles.cityNameContainer} key={names}>
                   <Image source={{
                     uri: "https://cdn-icons-png.flaticon.com/512/0/619.png"
                   }} style={styles.cityNameIcon} />
                   <Text>{names}</Text>
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
           ))

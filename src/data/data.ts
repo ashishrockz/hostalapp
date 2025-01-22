@@ -39,7 +39,7 @@ export const cities = [
 
 export const legalArr=["Privacy Policy","Terms And Conditions","Service Terms","Non Discrimination Policy","Booking Policy","Cancellation Policy"]
 
-const a= [
+export const arr= [
   {
     "location": "Indore",
     "type": "pg",

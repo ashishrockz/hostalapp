@@ -18,6 +18,7 @@ import Cancellation from '../screens/Cancellation';
 import BookingPolicy from '../screens/BookingPolicy';
 import NonDisceimination from '../screens/NonDisceimination';
 import ServiceTerms from '../screens/ServiceTerms';
+import HostelCard from '../screens/Hostelcard';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const DrawerNavigation = () => {
@@ -116,6 +117,13 @@ const ComponentNaviations = () => {
           <Stack.Screen
             name="Cancellation Policy"
             component={Cancellation}
+            options={{
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="hostelcard"
+            component={HostelCard}
             options={{
               headerTitleAlign: 'center',
             }}
