@@ -15,6 +15,7 @@ import {
 import {arr , sharingTypes,hostelTypes,priceRanges} from '../data/data';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import {Dropdown} from 'react-native-element-dropdown';
+import { useNavigation } from '@react-navigation/native';
 // import LinearGradient from 'react-native-linear-gradient';
 
 const {width} = Dimensions.get('window');
@@ -24,6 +25,7 @@ export default function HostelCard({route}: any) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setLoading] = useState(true);
   const sheetRef = useRef<BottomSheetMethods>(null);
+  const navigation = useNavigation();
 
   // Filter states
   const [sharingType, setSharingType] = useState('');
@@ -94,7 +96,7 @@ export default function HostelCard({route}: any) {
     : cityArray;
 
   const renderHostelCard = ({item}: any) => (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={()=>(navigation.navigate("HostelDetailCard", { details: item }))}>
       <ImageBackground
         source={{
           uri:
@@ -168,7 +170,7 @@ export default function HostelCard({route}: any) {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   if (isLoading) {
@@ -223,7 +225,6 @@ export default function HostelCard({route}: any) {
           </View>
         }
       />
-
       <BottomSheet ref={sheetRef} height={500} style={styles.bottomSheet}>
         <View style={styles.bottomSheetContent}>
           <Text style={styles.filterTitle}>Filter Hostels</Text>
