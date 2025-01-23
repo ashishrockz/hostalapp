@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -10,50 +10,36 @@ import {
   ActivityIndicator,
   FlatList,
   TextInput,
+  Dimensions,
 } from 'react-native';
-import { arr } from '../data/data';
+import {arr , sharingTypes,hostelTypes,priceRanges} from '../data/data';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
-import { Dropdown } from 'react-native-element-dropdown';
+import {Dropdown} from 'react-native-element-dropdown';
+import LinearGradient from 'react-native-linear-gradient';
 
-const sharingtype = [
-  { value: "Single", label: "Single Sharing" },
-  { value: "Double", label: "Double Sharing" },
-  { value: "Triple", label: "Three Sharing" },
-  { value: "Quadrant", label: "Four Sharing" },
-];
+const {width} = Dimensions.get('window');
 
-const hostelType = [
-  { value: "Mens", label: "Mens" },
-  { value: "Womans", label: "Womans" },
-  { value: "Colive", label: "Colive" },
-];
-
-const priceRange = [
-  { value: "7000", label: "5000 - 7000" },
-  { value: "10000", label: "7000 - 10000" },
-  { value: "13000", label: "10000 - 13000" },
-  { value: "13001", label: "Above 13000" },
-];
-
-export default function HostelCard({ route }: any) {
+export default function HostelCard({route}: any) {
   const [cityArray, setCityArray] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setLoading] = useState(true);
   const sheetRef = useRef<BottomSheetMethods>(null);
-  const [sharingType, setSharingType] = useState("");
-  const [hosteltype, setHostelType] = useState("");
-  const [range, setRange] = useState("");
+
+  // Filter states
+  const [sharingType, setSharingType] = useState('');
+  const [hostelType, setHostelType] = useState('');
+  const [priceRange, setPriceRange] = useState('');
 
   useEffect(() => {
-    const { city = '', type = '' } = route.params || {};
+    const {city = '', type = ''} = route.params || {};
     setLoading(true);
 
     let filteredCities = arr.filter(
-      (hstlObj: any) => hstlObj.location === city
+      (hstlObj: any) => hstlObj.location === city,
     );
     if (type) {
       filteredCities = filteredCities.filter(
-        hstlObj => hstlObj.type.toLowerCase() === type.toLowerCase()
+        hstlObj => hstlObj.type.toLowerCase() === type.toLowerCase(),
       );
     }
 
@@ -63,40 +49,51 @@ export default function HostelCard({ route }: any) {
 
   const applyFilters = () => {
     let filteredHostels = arr;
-  
+
     if (sharingType) {
       filteredHostels = filteredHostels.filter(hostel =>
-        hostel.roomTypes.some(room => room.sharing.toLowerCase() === sharingType.toLowerCase())
+        hostel.roomTypes.some(
+          room => room.sharing.toLowerCase() === sharingType.toLowerCase(),
+        ),
       );
     }
-  
-    // if (hosteltype) {
+
+    // if (hostelType) {
     //   filteredHostels = filteredHostels.filter(
-    //     hostel => hostel.hostletype.toLowerCase() === hosteltype.toLowerCase()
+    //     hostel => hostel.type.toLowerCase() === hostelType.toLowerCase(),
     //   );
     // }
-  
-    if (range) {
-      if(range == "13001"){
-        const maxPrice = parseInt(range);
-        filteredHostels = filteredHostels.filter(hostel =>
-          hostel.roomTypes.some(room => room.price > maxPrice)
-        );
-      }
-      else{
-        const maxPrice = parseInt(range);
-        filteredHostels = filteredHostels.filter(hostel =>
-          hostel.roomTypes.some(room => room.price <= maxPrice)
-        );
-      }
+
+    if (priceRange) {
+      const maxPrice = parseInt(priceRange);
+      filteredHostels = filteredHostels.filter(hostel =>
+        hostel.roomTypes.some(room =>
+          maxPrice === 13001 ? room.price > 13000 : room.price <= maxPrice,
+        ),
+      );
     }
-  
+
     setCityArray(filteredHostels);
     sheetRef.current?.close();
   };
-  
 
-  const renderHostelCard = ({ item }: any) => (
+  const resetFilters = () => {
+    setSharingType('');
+    setHostelType('');
+    setPriceRange('');
+    setCityArray(arr);
+    sheetRef.current?.close();
+  };
+
+  const filteredHostels = searchQuery
+    ? cityArray.filter(
+        hostel =>
+          hostel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          hostel.subLocation.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : cityArray;
+
+  const renderHostelCard = ({item}: any) => (
     <View style={styles.card}>
       <ImageBackground
         source={{
@@ -212,9 +209,9 @@ export default function HostelCard({ route }: any) {
       </View>
 
       <FlatList
-        data={cityArray}
+        data={filteredHostels}
         renderItem={renderHostelCard}
-        keyExtractor={item => item.name}
+        keyExtractor={(item, index) => `${item.name}-${index}`}
         contentContainerStyle={styles.listContent}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
@@ -227,102 +224,76 @@ export default function HostelCard({ route }: any) {
         }
       />
 
-      <BottomSheet ref={sheetRef}>
-        <Text style={styles.filterHeader}>Apply Filters</Text>
+      <BottomSheet ref={sheetRef} height={500} style={styles.bottomSheet}>
+        <View style={styles.bottomSheetContent}>
+          <Text style={styles.filterTitle}>Filter Hostels</Text>
 
-        <Dropdown
-          data={sharingtype}
-          maxHeight={180}
-          labelField="label"
-          valueField="value"
-          placeholder="Select Sharing Type"
-          value={sharingType}
-          onChange={(item) => setSharingType(item.value)}
-        />
+          <View style={styles.filterSection}>
+            <Text style={styles.filterLabel}>Sharing Type</Text>
+            <Dropdown
+              data={sharingTypes}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Sharing Type"
+              value={sharingType}
+              onChange={item => setSharingType(item.value)}
+              style={styles.dropdown}
+              placeholderStyle={styles.dropdownPlaceholder}
+              selectedTextStyle={styles.dropdownSelected}
+            />
+          </View>
 
-        <Dropdown
-          data={hostelType}
-          maxHeight={180}
-          labelField="label"
-          valueField="value"
-          placeholder="Select Hostel Type"
-          value={hosteltype}
-          onChange={(item) => setHostelType(item.value)}
-        />
+          <View style={styles.filterSection}>
+            <Text style={styles.filterLabel}>Hostel Type</Text>
+            <Dropdown
+              data={hostelTypes}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Hostel Type"
+              value={hostelType}
+              onChange={item => setHostelType(item.value)}
+              style={styles.dropdown}
+              placeholderStyle={styles.dropdownPlaceholder}
+              selectedTextStyle={styles.dropdownSelected}
+            />
+          </View>
 
-        <Dropdown
-          data={priceRange}
-          maxHeight={180}
-          labelField="label"
-          valueField="value"
-          placeholder="Select Price Range"
-          value={range}
-          onChange={(item) => setRange(item.value)}
-        />
+          <View style={styles.filterSection}>
+            <Text style={styles.filterLabel}>Price Range</Text>
+            <Dropdown
+              data={priceRanges}
+              labelField="label"
+              valueField="value"
+              placeholder="Select Price Range"
+              value={priceRange}
+              onChange={item => setPriceRange(item.value)}
+              style={styles.dropdown}
+              placeholderStyle={styles.dropdownPlaceholder}
+              selectedTextStyle={styles.dropdownSelected}
+            />
+          </View>
 
-        <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
-          <Text style={styles.applyButtonText}>Apply Filters</Text>
-        </TouchableOpacity>
+          <View style={styles.filterButtons}>
+            <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
+              <Text style={styles.resetButtonText}>Reset</Text>
+            </TouchableOpacity>
+
+            <LinearGradient
+              colors={['#6366f1', '#4f46e5']}
+              style={styles.applyButton}>
+              <TouchableOpacity
+                onPress={applyFilters}
+                style={styles.applyButtonInner}>
+                <Text style={styles.applyButtonText}>Apply</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+        </View>
       </BottomSheet>
     </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
-  filterHeader: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  bottomSheetContent: {
-    padding: 16,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-  },
-  filterTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-    marginBottom: 12,
-  },
-  dropdown: {
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    backgroundColor: '#f9fafb',
-  },
-  applyButton: {
-    backgroundColor: '#6366f1',
-    paddingVertical: 14,
-    borderRadius: 10,
-    marginTop: 16,
-    alignItems: 'center',
-  },
-  applyButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  resetButton: {
-    backgroundColor: '#f3f4f6',
-    paddingVertical: 14,
-    borderRadius: 10,
-    marginTop: 12,
-    alignItems: 'center',
-  },
-  resetButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#6b7280',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#e5e7eb',
-    marginVertical: 12,
-  },
   container: {
     flex: 1,
     backgroundColor: '#f3f4f6',
@@ -531,5 +502,76 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#6b7280',
     textAlign: 'center',
+  },
+  bottomSheet: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: -4},
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+  },
+  bottomSheetContent: {
+    padding: 20,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+  },
+  filterTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#1f2937',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  filterSection: {
+    marginBottom: 20,
+  },
+  filterLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#4b5563',
+    marginBottom: 10,
+  },
+  dropdown: {
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 12,
+    padding: 12,
+    backgroundColor: '#f9fafb',
+  },
+  dropdownPlaceholder: {
+    color: '#9ca3af',
+  },
+  dropdownSelected: {
+    color: '#111827',
+  },
+  filterButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  resetButton: {
+    backgroundColor: '#f3f4f6',
+    padding: 15,
+    borderRadius: 12,
+    width: '45%',
+    alignItems: 'center',
+  },
+  resetButtonText: {
+    color: '#4b5563',
+    fontWeight: '600',
+  },
+  applyButton: {
+    borderRadius: 12,
+    width: '45%',
+  },
+  applyButtonInner: {
+    padding: 15,
+    alignItems: 'center',
+  },
+  applyButtonText: {
+    color: 'white',
+    fontWeight: '600',
   },
 });

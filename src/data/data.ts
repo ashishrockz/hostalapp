@@ -1824,3 +1824,22 @@ export const arr= [
     }
   }                        
 ]
+export const sharingTypes = [
+  {label: 'Single Sharing', value: 'single'},
+  {label: 'Double Sharing', value: 'double'},
+  {label: 'Triple Sharing', value: 'triple'},
+  {label: 'Four Sharing', value: 'quadrant'},
+];
+
+export const hostelTypes = [
+  {label: 'Mens Hostel', value: 'mens'},
+  {label: 'Womens Hostel', value: 'womens'},
+  {label: 'Co-living', value: 'colive'},
+];
+
+export const priceRanges = [
+  {label: '5,000 - 7,000', value: '7000'},
+  {label: '7,000 - 10,000', value: '10000'},
+  {label: '10,000 - 13,000', value: '13000'},
+  {label: 'Above 13,000', value: '13001'},
+];
