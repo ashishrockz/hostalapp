@@ -15,7 +15,7 @@ import {
 import {arr , sharingTypes,hostelTypes,priceRanges} from '../data/data';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
 import {Dropdown} from 'react-native-element-dropdown';
-import LinearGradient from 'react-native-linear-gradient';
+// import LinearGradient from 'react-native-linear-gradient';
 
 const {width} = Dimensions.get('window');
 
@@ -277,16 +277,11 @@ export default function HostelCard({route}: any) {
             <TouchableOpacity style={styles.resetButton} onPress={resetFilters}>
               <Text style={styles.resetButtonText}>Reset</Text>
             </TouchableOpacity>
-
-            <LinearGradient
-              colors={['#6366f1', '#4f46e5']}
-              style={styles.applyButton}>
-              <TouchableOpacity
+            <TouchableOpacity
                 onPress={applyFilters}
                 style={styles.applyButtonInner}>
                 <Text style={styles.applyButtonText}>Apply</Text>
               </TouchableOpacity>
-            </LinearGradient>
           </View>
         </View>
       </BottomSheet>
