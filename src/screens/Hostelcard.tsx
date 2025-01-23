@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -11,25 +11,49 @@ import {
   FlatList,
   TextInput,
 } from 'react-native';
-import {arr} from '../data/data';
-import BottomSheet, {BottomSheetMethods} from '@devvie/bottom-sheet';
+import { arr } from '../data/data';
+import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import { Dropdown } from 'react-native-element-dropdown';
 
-export default function HostelCard({route}: any) {
+const sharingtype = [
+  { value: "Single", label: "Single Sharing" },
+  { value: "Double", label: "Double Sharing" },
+  { value: "Triple", label: "Three Sharing" },
+  { value: "Quadrant", label: "Four Sharing" },
+];
+
+const hostelType = [
+  { value: "Mens", label: "Mens" },
+  { value: "Womans", label: "Womans" },
+  { value: "Colive", label: "Colive" },
+];
+
+const priceRange = [
+  { value: "7000", label: "5000 - 7000" },
+  { value: "10000", label: "7000 - 10000" },
+  { value: "13000", label: "10000 - 13000" },
+  { value: "13001", label: "Above 13000" },
+];
+
+export default function HostelCard({ route }: any) {
   const [cityArray, setCityArray] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setLoading] = useState(true);
   const sheetRef = useRef<BottomSheetMethods>(null);
+  const [sharingType, setSharingType] = useState("");
+  const [hosteltype, setHostelType] = useState("");
+  const [range, setRange] = useState("");
 
   useEffect(() => {
-    const {city = '', type = ''} = route.params || {};
+    const { city = '', type = '' } = route.params || {};
     setLoading(true);
 
     let filteredCities = arr.filter(
-      (hstlObj: any) => hstlObj.location === city,
+      (hstlObj: any) => hstlObj.location === city
     );
     if (type) {
       filteredCities = filteredCities.filter(
-        hstlObj => hstlObj.type.toLowerCase() === type.toLowerCase(),
+        hstlObj => hstlObj.type.toLowerCase() === type.toLowerCase()
       );
     }
 
@@ -37,15 +61,42 @@ export default function HostelCard({route}: any) {
     setLoading(false);
   }, [route.params]);
 
-  const filteredHostels = searchQuery
-    ? cityArray.filter(
-        hostel =>
-          hostel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          hostel.subLocation.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
-    : cityArray;
+  const applyFilters = () => {
+    let filteredHostels = arr;
+  
+    if (sharingType) {
+      filteredHostels = filteredHostels.filter(hostel =>
+        hostel.roomTypes.some(room => room.sharing.toLowerCase() === sharingType.toLowerCase())
+      );
+    }
+  
+    // if (hosteltype) {
+    //   filteredHostels = filteredHostels.filter(
+    //     hostel => hostel.hostletype.toLowerCase() === hosteltype.toLowerCase()
+    //   );
+    // }
+  
+    if (range) {
+      if(range == "13001"){
+        const maxPrice = parseInt(range);
+        filteredHostels = filteredHostels.filter(hostel =>
+          hostel.roomTypes.some(room => room.price > maxPrice)
+        );
+      }
+      else{
+        const maxPrice = parseInt(range);
+        filteredHostels = filteredHostels.filter(hostel =>
+          hostel.roomTypes.some(room => room.price <= maxPrice)
+        );
+      }
+    }
+  
+    setCityArray(filteredHostels);
+    sheetRef.current?.close();
+  };
+  
 
-  const renderHostelCard = ({item}: any) => (
+  const renderHostelCard = ({ item }: any) => (
     <View style={styles.card}>
       <ImageBackground
         source={{
@@ -94,7 +145,7 @@ export default function HostelCard({route}: any) {
               style={styles.amenityIcon}
             />
             <Text style={styles.amenityText}>
-              {item.foodType.length == 2 ? 'Veg & Non-Veg' : 'Veg only'}
+              {item.foodType.length === 2 ? 'Veg & Non-Veg' : 'Veg only'}
             </Text>
           </View>
           <View style={styles.amenity}>
@@ -161,7 +212,7 @@ export default function HostelCard({route}: any) {
       </View>
 
       <FlatList
-        data={filteredHostels}
+        data={cityArray}
         renderItem={renderHostelCard}
         keyExtractor={item => item.name}
         contentContainerStyle={styles.listContent}
@@ -175,14 +226,103 @@ export default function HostelCard({route}: any) {
           </View>
         }
       />
+
       <BottomSheet ref={sheetRef}>
-        <Text>hello </Text>
+        <Text style={styles.filterHeader}>Apply Filters</Text>
+
+        <Dropdown
+          data={sharingtype}
+          maxHeight={180}
+          labelField="label"
+          valueField="value"
+          placeholder="Select Sharing Type"
+          value={sharingType}
+          onChange={(item) => setSharingType(item.value)}
+        />
+
+        <Dropdown
+          data={hostelType}
+          maxHeight={180}
+          labelField="label"
+          valueField="value"
+          placeholder="Select Hostel Type"
+          value={hosteltype}
+          onChange={(item) => setHostelType(item.value)}
+        />
+
+        <Dropdown
+          data={priceRange}
+          maxHeight={180}
+          labelField="label"
+          valueField="value"
+          placeholder="Select Price Range"
+          value={range}
+          onChange={(item) => setRange(item.value)}
+        />
+
+        <TouchableOpacity style={styles.applyButton} onPress={applyFilters}>
+          <Text style={styles.applyButtonText}>Apply Filters</Text>
+        </TouchableOpacity>
       </BottomSheet>
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
+  filterHeader: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  bottomSheetContent: {
+    padding: 16,
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  filterTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 12,
+  },
+  dropdown: {
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    backgroundColor: '#f9fafb',
+  },
+  applyButton: {
+    backgroundColor: '#6366f1',
+    paddingVertical: 14,
+    borderRadius: 10,
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  applyButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  resetButton: {
+    backgroundColor: '#f3f4f6',
+    paddingVertical: 14,
+    borderRadius: 10,
+    marginTop: 12,
+    alignItems: 'center',
+  },
+  resetButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#6b7280',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#e5e7eb',
+    marginVertical: 12,
+  },
   container: {
     flex: 1,
     backgroundColor: '#f3f4f6',
