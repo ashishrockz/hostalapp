@@ -1,13 +1,20 @@
 import { StatusBar, StyleSheet, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import ComponentNaviations from './src/navigations/ComponentNaviations'
+import { UserContext } from './src/hooks/context'
+import { User } from './src/types/Types'
 
 const App = () => {
+  const [userInfo, setUserInfo] = useState<User["userInfo"]>({});
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle='dark-content' backgroundColor= '#fff' />
-      <ComponentNaviations />
-    </View>
+    <UserContext.Provider value={{userInfo,setUserInfo,isLoggedIn,setIsLoggedIn}}>
+      <View style={styles.container}>
+        <StatusBar barStyle='dark-content' backgroundColor= '#fff' />
+        <ComponentNaviations />
+      </View>
+    </UserContext.Provider>
   )
 }
 

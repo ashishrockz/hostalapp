@@ -20,6 +20,7 @@ import NonDisceimination from '../screens/NonDisceimination';
 import ServiceTerms from '../screens/ServiceTerms';
 import HostelCard from '../screens/Hostelcard';
 import HostelDetailCard from '../screens/HostelDetailCard';
+import OTP from '../screens/OTP';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const DrawerNavigation = () => {
@@ -44,6 +45,11 @@ const ComponentNaviations = () => {
         <Stack.Screen
             name="Login"
             component={Login}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="OTP"
+            component={OTP}
             options={{headerShown: false}}
           />
           <Stack.Screen

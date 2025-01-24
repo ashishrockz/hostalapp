@@ -1,9 +1,10 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 const Login = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const [phoneNumber, setPhoneNumber] = useState("");
   return (
     <SafeAreaView style={styles.container}>
       
@@ -20,6 +21,8 @@ const Login = () => {
         <View style={styles.phoneInput}>
           <Text style={styles.countryCode}>+91</Text>
           <TextInput
+            value={phoneNumber}
+            onChangeText={(text)=>(setPhoneNumber(text))}
             style={styles.input}
             placeholder="Phone number"
             placeholderTextColor="#ffffff80"
@@ -30,7 +33,7 @@ const Login = () => {
         <Text style={styles.confirmText}>
           We'll text you to confirm your number.
         </Text>
-        <TouchableOpacity style={styles.continueButton}>
+        <TouchableOpacity style={styles.continueButton} onPress={()=>(navigation.navigate("OTP",{phoneNumber,otp:(Math.ceil(Math.random()*1000000))}))}>
           <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
       </View>
