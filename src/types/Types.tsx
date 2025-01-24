@@ -2,6 +2,7 @@ export interface User {
     userInfo: {
       name?: string;
       email?: string;
+      number?:string;
     };
     setUserInfo: (userInfo: User["userInfo"]) => void;
     isLoggedIn: boolean;

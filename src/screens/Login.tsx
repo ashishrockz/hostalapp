@@ -1,10 +1,18 @@
-import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-
-const Login = () => {
-  const navigation = useNavigation();
+import { userInfo } from '../data/data';
+const Login = ({navigation}:any) => {
+  // const navigation = useNavigation();
   const [phoneNumber, setPhoneNumber] = useState("");
+  const handleSubmit = () =>{
+    if(userInfo.some((item) => item.phnumber  == phoneNumber)){
+      navigation.navigate("OTP",{phoneNumber,otp:(Math.floor(100000 + Math.random() * 900000))})
+    }
+    else{
+      Alert.alert("phonenumber doesn't exist")
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       
@@ -33,7 +41,7 @@ const Login = () => {
         <Text style={styles.confirmText}>
           We'll text you to confirm your number.
         </Text>
-        <TouchableOpacity style={styles.continueButton} onPress={()=>(navigation.navigate("OTP",{phoneNumber,otp:(Math.ceil(Math.random()*1000000))}))}>
+        <TouchableOpacity style={styles.continueButton} onPress={()=> handleSubmit()}>
           <Text style={styles.continueText}>Continue</Text>
         </TouchableOpacity>
       </View>

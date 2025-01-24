@@ -21,6 +21,8 @@ import ServiceTerms from '../screens/ServiceTerms';
 import HostelCard from '../screens/Hostelcard';
 import HostelDetailCard from '../screens/HostelDetailCard';
 import OTP from '../screens/OTP';
+import Accounts from '../screens/Accounts';
+import Booking from '../screens/Booking';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const DrawerNavigation = () => {
@@ -138,6 +140,20 @@ const ComponentNaviations = () => {
           <Stack.Screen
             name="HostelDetailCard"
             component={HostelDetailCard}
+            options={{
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="Account"
+            component={Accounts}
+            options={{
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="Your Bookings"
+            component={Booking}
             options={{
               headerTitleAlign: 'center',
             }}

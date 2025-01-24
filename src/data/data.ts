@@ -13,6 +13,15 @@ export const citiesHostels = [
     { code: "P", name: ["Pune"] }
 ];
 
+export const userInfo =[{
+  name: "ashish",
+  mail:'b.ashishrockz@gmail.com',
+  phnumber:'9502046113'
+},{
+  name:'karthik',
+  mail:'karthik123@gmail.com',
+  phnumber:'9381567597'
+}]
 
 export const cities = [
     {

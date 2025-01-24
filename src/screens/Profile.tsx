@@ -6,37 +6,62 @@ import {
   Image,
   SafeAreaView,
 } from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react'; // Import useContext properly
 import MenuItem from '../component/MenuItem/MenuItem';
+import {UserContext} from '../hooks/context';
 
 const Profile = ({navigation}: any) => {
+  const {isLoggedIn, userInfo} = useContext(UserContext); // Use useContext correctly
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.profileSection}>
-        <View style={styles.avatarContainer}>
-          <Image
-            source={require('../assets/icons/profile-placeholder.png')}
-            style={styles.avatarImage}
-          />
+      {isLoggedIn ? (
+        <View style={styles.profileSection}>
+          <View style={styles.avatarContainer}>
+            <Image
+              source={require('../assets/icons/profile-placeholder.png')}
+              style={styles.avatarImage}
+            />
+          </View>
+          <Text style={styles.profileTitle}>{userInfo.name}</Text>
+          <Text style={styles.profileSubtitle}>{userInfo.mail}</Text>
+          <Text style={styles.profileSubtitle}>{userInfo.phnumber}</Text>
         </View>
-        <Text style={styles.profileTitle}>You are not logged in</Text>
-        <Text style={styles.profileSubtitle}>
-          Login or sign up to view your complete profile
-        </Text>
-        <TouchableOpacity
-          style={styles.continueButton}
-          onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.continueButtonText}>Continue</Text>
-        </TouchableOpacity>
-      </View>
-
+      ) : (
+        <View style={styles.profileSection}>
+          <View style={styles.avatarContainer}>
+            <Image
+              source={require('../assets/icons/profile-placeholder.png')}
+              style={styles.avatarImage}
+            />
+          </View>
+          <Text style={styles.profileTitle}>You are not logged in</Text>
+          <Text style={styles.profileSubtitle}>
+            Login or sign up to view your complete profile
+          </Text>
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.continueButtonText}>Continue</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={styles.menuSection}>
-        <MenuItem
+        {isLoggedIn ? (
+          <MenuItem
+          iconSource={require('../assets/icons/account.png')}
+          title="Account"
+          subtitle="Manage your account such as personal details, logout, delete account"
+          onPress={() => navigation.navigate('Account')}
+        />
+        ) :(
+          <MenuItem
           iconSource={require('../assets/icons/account.png')}
           title="Account"
           subtitle="Manage your account such as personal details, logout, delete account"
           onPress={() => navigation.navigate('Login')}
         />
+        )}
         <MenuItem
           iconSource={require('../assets/icons/support.png')}
           title="Support"
@@ -46,7 +71,7 @@ const Profile = ({navigation}: any) => {
         <MenuItem
           iconSource={require('../assets/icons/legal.png')}
           title="Legal"
-          subtitle="You can see privacy policy, terms and condition, service terms, Non discrimination policy, booking policy, cancellation policy"
+          subtitle="You can see privacy policy, terms and conditions, service terms, and more"
           onPress={() => navigation.navigate('Legal')}
         />
       </View>

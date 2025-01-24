@@ -1,10 +1,11 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   DrawerContentScrollView,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
+import {UserContext} from '../../hooks/context';
 interface User {
   profilePic: string | undefined;
 }
@@ -18,25 +19,37 @@ type DrawerParamList = {
 };
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  const {isLoggedIn , userInfo ,setIsLoggedIn ,setUserInfo} = useContext(UserContext);
   const navigation = useNavigation();
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserInfo({});
+    navigation.navigate('Login');
+  };
   return (
     <View style={styles.container}>
       <DrawerContentScrollView
         {...props}
         contentContainerStyle={styles.scrollContent}>
         <View style={styles.profileSection}>
-          {user ? (
-            user.profilePic ? (
+          {isLoggedIn ? (
+            isLoggedIn.profilePic ? (
               <View style={styles.profileContainer}>
                 <Image
-                  source={{uri: user.profilePic}}
+                  source={{uri: isLoggedIn.profilePic}}
                   style={styles.profilePic}
                 />
                 <Text style={styles.userName}>User Name</Text>
               </View>
             ) : (
-              <Text style={styles.noImage}>No Profile Picture</Text>
+              <View style={styles.profileContainer}>
+               <Image
+                source={require('../../assets/noprofile.png')}
+                style={styles.profilePic}
+              />              
+              <Text>Welcome to ApnaGhar</Text>
+                <Text style={styles.userName}>{userInfo.name}</Text>
+              </View>
             )
           ) : (
             <View style={styles.loginContainer}>
@@ -59,11 +72,15 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             onPress={() => navigation.navigate('Profile')}>
             <Text style={styles.itemText}>Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity
+          {isLoggedIn ? (<TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate('Your Bookings')}>
+            <Text style={styles.itemText}>Booking</Text>
+          </TouchableOpacity>):(<TouchableOpacity
             style={styles.item}
             onPress={() => navigation.navigate('Login')}>
             <Text style={styles.itemText}>Booking</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>)}
           <TouchableOpacity
             style={styles.item}
             onPress={() => navigation.navigate('Legal')}>
@@ -77,12 +94,17 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         </View>
       </DrawerContentScrollView>
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerItem} onPress={()=>(navigation.navigate("Privacy Policy"))}>
-          <Text style={styles.footerText}>Privacy Policy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerItem} onPress={()=>(navigation.navigate("Terms And Conditions"))}>
-          <Text style={styles.footerText}>Terms and Conditions</Text>
-        </TouchableOpacity>
+        {isLoggedIn && (
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
+        )}
+          <TouchableOpacity onPress={() => navigation.navigate('Privacy Policy')}>
+            <Text style={styles.footerLinkText}>Privacy Policy</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Terms And Conditions')}>
+            <Text style={styles.footerLinkText}>Terms and Conditions</Text>
+          </TouchableOpacity>
         <Text style={styles.versionText}>Version 1.0.0</Text>
       </View>
     </View>
@@ -90,6 +112,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 };
 
 export default DrawerContent;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -160,22 +183,31 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   footer: {
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     borderTopWidth: 1,
     borderTopColor: '#E5E5E5',
   },
-  footerItem: {
+  logoutButton: {
     paddingVertical: 10,
+    borderRadius: 8,
   },
-  footerText: {
+  logoutText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'red',
+    padding:10,
+  },
+
+  footerLinkText: {
     fontSize: 14,
+    padding:10,
     color: '#666666',
   },
   versionText: {
     fontSize: 12,
     color: '#999999',
     textAlign: 'center',
-    marginTop: 15,
-    marginBottom: 5,
+    marginTop: 5,
   },
 });
