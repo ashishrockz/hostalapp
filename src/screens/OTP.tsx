@@ -35,7 +35,7 @@ export default function OTP({route,navigation }:any) {
       setIsLoggedIn(true);
       setSuccess(true);
       const user = userInfo.filter(item => item.phnumber == route.params.phoneNumber)
-      setUserInfo(userInfo[0])
+      setUserInfo(user[0])
       navigation.navigate('MainDrawer');
     }
     console.log('Submitted OTP:', otp);
