@@ -1,9 +1,11 @@
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet } from 'react-native';
 import React from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {createStackNavigator, StackScreenProps} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+// Import your components
 import DrawerContent from '../component/DrawerContent/DrawerContent';
 import Index from '../screens/Index';
 import SearchHeader from '../component/SearchHeader/SearchHeader';
@@ -23,8 +25,76 @@ import HostelDetailCard from '../screens/HostelDetailCard';
 import OTP from '../screens/OTP';
 import Accounts from '../screens/Accounts';
 import Booking from '../screens/Booking';
+import HostelBooking from '../screens/hostelBooking';
+import PaymentGateway from '../screens/PaymentGateway';
+
+// Define types for the navigation parameters
+export type RootStackParamList = {
+  Login: undefined;
+  OTP: undefined;
+  MainDrawer: undefined;
+  SearchBar: undefined;
+  Profile: undefined;
+  Support: undefined;
+  Legal: undefined;
+  'Privacy Policy': undefined;
+  'Terms And Conditions': undefined;
+  'Service Terms': undefined;
+  'Non Discrimination Policy': undefined;
+  'Booking Policy': undefined;
+  'Cancellation Policy': undefined;
+  hostelcard: undefined;
+  HostelDetailCard: undefined;
+  Account: undefined;
+  'Your Bookings': undefined;
+  'Confirm Bookings': {
+    hostelDetails: {
+      imageUrl: string;
+      name: string;
+      location: string;
+      subLocation: string;
+      roomAmenities: string[];
+      hostelRules: string[];
+    };
+    selectedRoom: {
+      sharing: number;
+      price: number;
+    };
+  };
+  PaymentScreen: {
+    hostelDetails: {
+      name: string;
+      location: string;
+      subLocation: string;
+    };
+    selectedRoom: {
+      sharing: number;
+      price: number;
+    };
+    duration: number;
+    movingDate: Date;
+    totalAmount: number;
+  };
+  BookingSuccess: {
+    paymentId: string;
+    orderId: string;
+    amount: number;
+    timestamp: string;
+    customerDetails: {
+      name: string;
+      email: string;
+      phone: string;
+    };
+    hostelDetails: any;
+    roomDetails: any;
+    duration: number;
+    movingDate: string;
+  };
+};
+
 const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
+
 const DrawerNavigation = () => {
   return (
     <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
@@ -39,25 +109,25 @@ const DrawerNavigation = () => {
     </Drawer.Navigator>
   );
 };
-const ComponentNaviations = () => {
+const ComponentNavigations = () => {
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator>
-        <Stack.Screen
+          <Stack.Screen
             name="Login"
             component={Login}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="OTP"
             component={OTP}
-            options={{headerShown: false}}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="MainDrawer"
-            children={() => <DrawerNavigation />}
-            options={{headerShown: false}}
+            component={DrawerNavigation}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="SearchBar"
@@ -66,7 +136,7 @@ const ComponentNaviations = () => {
               headerTitleAlign: 'center',
             }}
           />
-          
+
           <Stack.Screen
             name="Profile"
             component={Profile}
@@ -102,21 +172,21 @@ const ComponentNaviations = () => {
               headerTitleAlign: 'center',
             }}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="Service Terms"
             component={ServiceTerms}
             options={{
               headerTitleAlign: 'center',
             }}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="Non Discrimination Policy"
             component={NonDisceimination}
             options={{
               headerTitleAlign: 'center',
             }}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="Booking Policy"
             component={BookingPolicy}
             options={{
@@ -158,11 +228,25 @@ const ComponentNaviations = () => {
               headerTitleAlign: 'center',
             }}
           />
+          <Stack.Screen
+            name="Confirm Bookings"
+            component={HostelBooking}
+            options={{
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="PaymentScreen"
+            component={PaymentGateway}
+            options={{
+              headerTitleAlign: 'center',
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
   );
 };
 
-export default ComponentNaviations;
+export default ComponentNavigations;
 const styles = StyleSheet.create({});

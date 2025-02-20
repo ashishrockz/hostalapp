@@ -1,28 +1,37 @@
 import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
 import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { userInfo } from '../data/data';
-const Login = ({navigation}:any) => {
-  // const navigation = useNavigation();
+
+const Login = ({ navigation }: any) => {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const handleSubmit = () =>{
-    if(userInfo.some((item) => item.phnumber  == phoneNumber)){
-      navigation.navigate("OTP",{phoneNumber,otp:(Math.floor(100000 + Math.random() * 900000))})
+
+  const validatePhoneNumber = (number: string) => {
+    const phoneRegex = /^\d{10}$/;
+    return phoneRegex.test(number);
+  };
+
+  const handleSubmit = () => {
+    const trimmedPhoneNumber = phoneNumber.trim();
+    if (userInfo.some((item) => item.phnumber === trimmedPhoneNumber)) {
+      navigation.navigate("OTP", {
+        phoneNumber: trimmedPhoneNumber,
+        otp: Math.floor(100000 + Math.random() * 900000),
+      });
+    } else {
+      Alert.alert("Phone number doesn't exist");
     }
-    else{
-      Alert.alert("phonenumber doesn't exist")
-    }
-  }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      
       <View style={styles.header}>
         <Text style={styles.headerText}>Get started with</Text>
         <Text style={styles.brandText}>ApnaGhar</Text>
       </View>
-      <TouchableOpacity style={styles.skipButton}
-       onPress={() =>navigation.navigate("MainDrawer")}
-       >
+      <TouchableOpacity
+        style={styles.skipButton}
+        onPress={() => navigation.navigate("MainDrawer")}
+      >
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
       <View style={styles.inputContainer}>
@@ -30,24 +39,42 @@ const Login = ({navigation}:any) => {
           <Text style={styles.countryCode}>+91</Text>
           <TextInput
             value={phoneNumber}
-            onChangeText={(text)=>(setPhoneNumber(text))}
+            onChangeText={(text) => setPhoneNumber(text.replace(/\s+/g, ""))} 
             style={styles.input}
             placeholder="Phone number"
             placeholderTextColor="#ffffff80"
             keyboardType="phone-pad"
           />
-          {/* <Text style={styles.checkMark}>✓</Text> */}
         </View>
         <Text style={styles.confirmText}>
           We'll text you to confirm your number.
         </Text>
-        <TouchableOpacity style={styles.continueButton} onPress={()=> handleSubmit()}>
-          <Text style={styles.continueText}>Continue</Text>
+        <TouchableOpacity
+          style={[
+            styles.continueButton,
+            {
+              backgroundColor: validatePhoneNumber(phoneNumber) ? "#ffffff" : "#ffffff50",
+            },
+          ]}
+          onPress={handleSubmit}
+          disabled={!validatePhoneNumber(phoneNumber)}
+        >
+          <Text
+            style={[
+              styles.continueText,
+              {
+                color: validatePhoneNumber(phoneNumber) ? "#0066ff" : "#ffffff80", 
+              },
+            ]}
+          >
+            Continue
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
+
 export default Login;
 
 const styles = StyleSheet.create({
@@ -102,10 +129,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 0,
   },
-  checkMark: {
-    color: '#ffffff',
-    fontSize: 20,
-  },
   confirmText: {
     color: '#ffffff',
     fontSize: 14,
@@ -113,13 +136,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   continueButton: {
-    backgroundColor: '#ffffff',
     borderRadius: 30,
     paddingVertical: 15,
     marginTop: 20,
   },
   continueText: {
-    color: '#0066ff',
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',

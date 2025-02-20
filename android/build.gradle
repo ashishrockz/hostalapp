@@ -10,6 +10,8 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://artifactory.paytm.in/libs-release-local" }
+
     }
     dependencies {
         classpath("com.android.tools.build:gradle")
@@ -17,5 +19,10 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
     }
 }
-
+allprojects {
+    repositories {
+        // ... other repositories
+        maven { url "https://artifactory.paytm.in/libs-release-local" }
+    }
+}
 apply plugin: "com.facebook.react.rootproject"

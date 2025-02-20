@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -8,10 +8,15 @@ import {
   View,
   TouchableOpacity,
   Platform,
+  Modal,
+  TextInput,
 } from 'react-native';
 
-export default function HostelDetailCard({route}: any) {
+export default function HostelDetailCard({route,navigation}: any) {
   const details = route.params.details;
+  const [isReviewModalVisible, setReviewModalVisible] = useState(false);
+  const [selectedGender, setSelectedGender] = useState("");
+
 
   const renderAmenityItem = (item: string, index: number) => (
     <View key={index} style={styles.amenityItem}>
@@ -69,13 +74,84 @@ export default function HostelDetailCard({route}: any) {
           <View style={styles.tagContainer}>
             <Text style={styles.tagText}>Colive</Text>
           </View>
+        </View>
 
-          <View style={styles.rentSection}>
-            <Text style={styles.description}>Pre Month Rent Starting From</Text>
-            <Text style={styles.rentAmount}>Rs 4,500/-</Text>
+        <View style={styles.sectionContainer}>
+          <View style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
+              <Text style={{width:"66%"}}>Have a question about property? Ask away! We're here to help you get the info you need for your perfect hostel</Text>
+              <TouchableOpacity onPress={() => setReviewModalVisible(true)} style={{padding:10,backgroundColor:"blue",height:40,borderRadius:5}}>
+                <Text style={{color:"white"}}>Send Inquiry</Text>
+              </TouchableOpacity>
           </View>
         </View>
 
+        <Modal
+          visible={isReviewModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setReviewModalVisible(false)}>
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContent}>
+              <TouchableOpacity onPress={()=>setReviewModalVisible(false)}>
+              <Image source={{
+                uri:"https://img.freepik.com/free-vector/error-alert-button-symbol_24877-83749.jpg"
+              }} style={{height:25,width:25,alignSelf:"flex-end"}}></Image>
+              </TouchableOpacity>
+              <Text style={styles.modalTitle}>Write Your Query</Text>
+              <TextInput
+                placeholder="Hi buddy type your name"
+                style={styles.input}
+              />
+              <TextInput
+                placeholder="+91 9502046113"
+                style={styles.input}
+                keyboardType="phone-pad"
+              />
+              <View style={styles.genderContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.genderButton,
+                    selectedGender === 'male' && styles.selectedGenderButton
+                  ]}
+                  onPress={() => setSelectedGender('male')}>
+                  <Text style={[
+                    styles.genderText,
+                    selectedGender === 'male' && styles.selectedGenderText
+                  ]}>Male</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.genderButton,
+                    selectedGender === 'female' && styles.selectedGenderButton
+                  ]}
+                  onPress={() => setSelectedGender('female')}>
+                  <Text style={[
+                    styles.genderText,
+                    selectedGender === 'female' && styles.selectedGenderText
+                  ]}>Female</Text>
+                </TouchableOpacity>
+              </View>
+
+              <TextInput
+                placeholder="Enter your budget amount (e.g., 5000)"
+                style={styles.input}
+                keyboardType="numeric"
+              />
+              <TextInput
+                placeholder="Describe your query in detail here (optional)"
+                style={[styles.input, { height: 100 }]}
+                multiline
+                maxLength={200}
+              />
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={() => setReviewModalVisible(false)}>
+                <Text style={styles.submitButtonText}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         {/* Room Types Section */}
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Sharing Type</Text>
@@ -84,7 +160,11 @@ export default function HostelDetailCard({route}: any) {
               key={index}
               style={styles.roomTypeContainer}
               activeOpacity={0.7}>
-              <Text style={styles.roomSharingText}>{obj.sharing}</Text>
+             <View>
+                <Text style={styles.roomSharingText}>{obj.sharing}</Text>
+                <Text style={{marginTop:6,fontWeight:"bold",marginBottom:3}}>Rent</Text>
+                <Text style={styles.roomPriceText}>₹ {obj.price}/-</Text>
+             </View>
               <Image
                 source={{
                   uri: 'https://static.thenounproject.com/png/1021592-200.png',
@@ -93,7 +173,17 @@ export default function HostelDetailCard({route}: any) {
                 accessible={true}
                 accessibilityLabel="Room Type Icon"
               />
-              <Text style={styles.roomPriceText}>₹ {obj.price}/-</Text>
+              <TouchableOpacity
+                style={{ borderWidth: 1, borderColor: "blue", padding: 5, borderRadius: 5 }}
+                onPress={() => {
+                  navigation.navigate("Confirm Bookings", {
+                    hostelDetails: details,
+                    selectedRoom: obj, // Pass the selected room type
+                  });
+                }}
+              >
+                <Text style={{ color: "blue", fontSize: 12 }}>Request To Book</Text>
+              </TouchableOpacity>
             </TouchableOpacity>
           ))}
         </View>
@@ -209,6 +299,55 @@ export default function HostelDetailCard({route}: any) {
 }
 
 const styles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 20,
+    width: '90%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+  },
+  // genderContainer: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-between',
+  //   marginBottom: 10,
+  // },
+  // genderButton: {
+  //   padding: 10,
+  //   borderRadius: 10,
+  //   borderWidth: 1,
+  //   borderColor: '#ccc',
+  //   flex: 1,
+  //   alignItems: 'center',
+  //   marginHorizontal: 5,
+  // },
+  submitButton: {
+    backgroundColor: '#3B82F6',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  submitButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
   container: {
     flex: 1,
     backgroundColor: '#f4f4f6',
@@ -517,4 +656,30 @@ const styles = StyleSheet.create({
     color: '#333',
     textAlign: 'center',
   },
+  genderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  genderButton: {
+    padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  selectedGenderButton: {
+    backgroundColor: '#3B82F6',
+    borderColor: '#3B82F6',
+  },
+  genderText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  selectedGenderText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },  
 });

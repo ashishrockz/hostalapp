@@ -1,4 +1,4 @@
-export interface User {
+  export interface User {
     userInfo: {
       name?: string;
       email?: string;
@@ -7,4 +7,6 @@ export interface User {
     setUserInfo: (userInfo: User["userInfo"]) => void;
     isLoggedIn: boolean;
     setIsLoggedIn: (isLoggedIn: boolean) => void;
+    recentBookings:any;
+    setRecentBookings:(obj:any) => void;
   }
